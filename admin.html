@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Admin Panel | Mahadev Collection</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-page="admin">
+
+<header class="admin-header">
+  <div class="admin-brand">
+    <img src="images/logo.jpg" alt="Logo">
+    <span>Mahadev Collection &middot; Admin</span>
+  </div>
+  <div class="admin-user-nav" id="admin-user-bar" style="display:none">
+    <span class="admin-user-email" id="admin-email"></span>
+    <a href="index.html" class="btn btn-outline btn-sm" target="_blank">View Store &nearr;</a>
+    <button class="btn btn-outline btn-sm" id="logout-btn">Logout</button>
+  </div>
+</header>
+
+<main class="container admin-main">
+
+  <!-- ================= LOGIN SECTION ================= -->
+  <section id="login-section">
+    <div class="admin-login-box">
+      <h2>Shop Owner Login</h2>
+      <p class="sub">Log in to manage products, view customer orders and shop settings.</p>
+      <form id="login-form">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="admin-login-email">Email Address</label>
+            <input type="email" id="admin-login-email" required autocomplete="username" placeholder="admin@example.com">
+          </div>
+          <div class="field full">
+            <label for="admin-login-password">Password</label>
+            <input type="password" id="admin-login-password" required autocomplete="current-password" placeholder="••••••••">
+          </div>
+        </div>
+        <p id="login-err" style="color:#ff8a8a;margin-top:14px;display:none;font-size:14px"></p>
+        <button type="submit" class="btn btn-block" id="login-submit-btn" style="margin-top:20px">LOG IN</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD SECTION ================= -->
+  <section id="dashboard-section" style="display:none">
+    <nav class="admin-tabs">
+      <button class="admin-tab active" data-tab="products">Products</button>
+      <button class="admin-tab" data-tab="orders">Orders</button>
+      <button class="admin-tab" data-tab="settings">Shop Settings</button>
+      <button class="admin-tab" data-tab="backup">Backup Database</button>
+    </nav>
+
+    <!-- TAB 1: PRODUCTS -->
+    <div class="tab-pane" id="tab-products">
+      <div class="admin-bar">
+        <div class="admin-bar-group">
+          <button class="btn btn-sm" id="btn-add-product">+ Add Product</button>
+          <input type="text" id="prod-search" class="tools" placeholder="Search products..." style="padding:8px 14px">
+          <select id="prod-filter-cat" style="padding:8px 12px;background:#0b0b0b;border:1px solid #333;color:#fff;border-radius:6px">
+            <option value="all">All Categories</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="kids">Kids</option>
+          </select>
+        </div>
+        <div id="prod-count-label" style="font-size:14px;color:var(--muted)"></div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:60px">Image</th>
+              <th>Name &amp; Category</th>
+              <th>Price (₹)</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>New?</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <!-- Rendered by js/admin.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 2: ORDERS -->
+    <div class="tab-pane" id="tab-orders" style="display:none">
+      <div class="admin-bar">
+        <div class="admin-bar-group">
+          <label for="order-filter-status" style="font-size:14px;color:var(--muted)">Status:</label>
+          <select id="order-filter-status" style="padding:8px 12px;background:#0b0b0b;border:1px solid #333;color:#fff;border-radius:6px">
+            <option value="all">All Orders</option>
+            <option value="new">New</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div>
+          <a href="/api/admin/orders/export" class="btn btn-outline btn-sm" download>Download CSV</a>
+        </div>
+      </div>
+
+      <div id="orders-list">
+        <!-- Rendered by js/admin.js -->
+      </div>
+    </div>
+
+    <!-- TAB 3: SETTINGS -->
+    <div class="tab-pane" id="tab-settings" style="display:none">
+      <form class="box" id="settings-form" style="max-width:760px;margin:0 auto">
+        <h2>Shop Information &amp; Contact</h2>
+        <div class="form-grid">
+          <div class="field"><label for="st-name">Store Name *</label><input id="st-name" required></div>
+          <div class="field"><label for="st-wa">Primary WhatsApp (91+number) *</label><input id="st-wa" required></div>
+          <div class="field full"><label for="st-phones">Phone Numbers (comma separated)</label><input id="st-phones" placeholder="7030474595, 7742185654"></div>
+          <div class="field"><label for="st-city">City</label><input id="st-city"></div>
+          <div class="field full"><label for="st-addr">Full Address</label><textarea id="st-addr" rows="2"></textarea></div>
+          <div class="field full"><label for="st-hours">Opening Hours</label><input id="st-hours" placeholder="10:00 AM – 9:00 PM (All Days)"></div>
+          <div class="field full"><label for="st-map">Google Maps Embed Link / Query</label><input id="st-map" placeholder="https://www.google.com/maps?q=..."></div>
+          <div class="field"><label for="st-insta">Instagram Link</label><input id="st-insta" placeholder="https://instagram.com/..."></div>
+          <div class="field"><label for="st-fb">Facebook Link</label><input id="st-fb" placeholder="https://facebook.com/..."></div>
+          <div class="field full"><label for="st-ret">Return / Exchange Policy</label><textarea id="st-ret" rows="2" placeholder="Easy exchange within 7 days at store..."></textarea></div>
+        </div>
+        <button type="submit" class="btn btn-block" style="margin-top:22px">SAVE SETTINGS</button>
+      </form>
+    </div>
+
+    <!-- TAB 4: BACKUP -->
+    <div class="tab-pane" id="tab-backup" style="display:none">
+      <div class="backup-card">
+        <h3>Database Backup</h3>
+        <p>
+          Download a live, complete snapshot of your SQLite database (<code>data/mahadev.db</code>).
+          This file contains all your products, categories, orders, customers, and shop settings.
+          Keep regular copies on your computer for safety.
+        </p>
+        <a href="/api/admin/backup" class="btn" download id="btn-download-backup">
+          DOWNLOAD DATABASE BACKUP (.db)
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= PRODUCT EDIT / ADD MODAL ================= -->
+<div class="modal-overlay hidden" id="product-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-title">Edit Product</h3>
+      <button class="close-btn" id="modal-close-btn">&times;</button>
+    </div>
+    <form id="product-form">
+      <input type="hidden" id="p-id">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="p-name">Product Name *</label>
+          <input id="p-name" required placeholder="e.g. Chandni Embroidered Kurti">
+        </div>
+        <div class="field">
+          <label for="p-cat">Category *</label>
+          <select id="p-cat">
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="kids">Kids</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="p-price">Price (₹, leave blank for "Price on WhatsApp")</label>
+          <input type="number" id="p-price" step="0.01" min="0" placeholder="e.g. 299">
+        </div>
+        <div class="field">
+          <label for="p-mrp">MRP (₹, optional)</label>
+          <input type="number" id="p-mrp" step="0.01" min="0" placeholder="e.g. 499">
+        </div>
+        <div class="field">
+          <label for="p-tag">Tag (e.g. NEW, SALE)</label>
+          <input id="p-tag" placeholder="NEW">
+        </div>
+        <div class="field full">
+          <label for="p-sizes">Sizes (comma-separated, leave blank if no size)</label>
+          <input id="p-sizes" placeholder="M, L, XL, XXL">
+        </div>
+        <div class="field full">
+          <label for="p-colors">Colours (comma-separated)</label>
+          <input id="p-colors" placeholder="Maroon, Black, Olive">
+        </div>
+        <div class="field full">
+          <label for="p-desc">Description</label>
+          <textarea id="p-desc" rows="3" placeholder="Fabric details, combo items, washing instructions..."></textarea>
+        </div>
+        <div class="field full">
+          <label>Product Image</label>
+          <input type="file" id="p-file" accept="image/jpeg,image/png,image/webp">
+          <input type="hidden" id="p-img-url">
+          <div class="img-preview-box">
+            <img id="p-img-preview" src="images/banner.jpg" alt="Preview">
+            <span style="font-size:13px;color:var(--muted)" id="p-img-name">Current image</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="p-sort">Display Order</label>
+          <input type="number" id="p-sort" value="0">
+        </div>
+        <div class="field" style="display:flex;gap:20px;align-items:center;padding-top:20px">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="p-stock" checked> In Stock
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="p-active" checked> Active (Visible)
+          </label>
+        </div>
+        <div class="field" style="display:flex;gap:20px;align-items:center">
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="p-new"> Mark as New Arrival
+          </label>
+          <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="p-land"> Landscape Image
+          </label>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:24px;justify-content:flex-end">
+        <button type="button" class="btn btn-outline" id="modal-cancel-btn">Cancel</button>
+        <button type="submit" class="btn" id="modal-save-btn">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
+
